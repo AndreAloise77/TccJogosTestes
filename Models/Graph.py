@@ -11,8 +11,9 @@ class Graph:
         self.newEdgeElements: List[str] = []
         self.newVertexElements: List[str] = []
 
-    def add_edge(self, source_vertex_region: str, target_vertex_region: str, file_name: str):
-        key_value = source_vertex_region + '_' + target_vertex_region
+    def add_edge(self, source_vertex_region: str, target_vertex_region: str,
+                 file_name: str, is_edge_respawn: bool = False):
+        key_value: str = source_vertex_region + '_' + target_vertex_region
         if key_value in self.edges:
             edge = self.edges.get(key_value)
             edge.frequency += 1
@@ -20,7 +21,7 @@ class Graph:
         else:
             source = self.__add_vertex(source_vertex_region, self.vertices)
             target = self.__add_vertex(target_vertex_region, self.vertices)
-            edge = GraphEdge(source, target, file_name)
+            edge = GraphEdge(source, target, file_name, is_edge_respawn)
             self.edges[key_value] = edge
             self.newEdgeElements.append(key_value)
 
