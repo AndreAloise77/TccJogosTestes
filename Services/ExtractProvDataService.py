@@ -16,6 +16,7 @@ REGION = 'Region'
 EDGE_LABEL_NEUTRAL = 'Neutral'
 ATTRIBUTE_NAME_OBJECT_NAME = 'ObjectName'
 ATTRIBUTE_VALUE_PLAYER = 'Player'
+RESPAWN = 'Respawn'
 
 
 def get_tree_from_file_path(file_path: str):
@@ -137,7 +138,12 @@ def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
     source_region = __get_region_from_vertex(source_vertex)
     target_vertex = edge.target_vertex_id
     target_region = __get_region_from_vertex(target_vertex)
+    label_s = source_vertex.label_element
+    label_t = target_vertex.label_element
+
     if source_region != target_region:
+        if (label_s != label_t) and (label_t == RESPAWN or label_s == RESPAWN):
+            graph.add_edge(target_region, source_region, file_name, True)
         graph.add_edge(target_region, source_region, file_name)
 
 
