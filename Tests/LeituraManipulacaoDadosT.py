@@ -1,8 +1,12 @@
 # Import System Struct Objects
 
 # Import Models
+from typing import List
+
 from Models.Gats import Gats
 from Models.Graph import Graph
+from Tests.GatsGraph import GatsGraph
+from Tests.AGatsGraph import AGats
 
 # Import Utility Functions
 from Services.ExtractProvDataService import get_tree_from_file_path
@@ -10,8 +14,6 @@ from Services.ExtractProvDataService import get_tree_vertices_dictionary
 from Services.ExtractProvDataService import get_tree_edges_dictionary
 from Services.ExtractProvDataService import filter_edge_dict_by_type_and_label
 from Services.ExtractProvDataService import add_edges_to_graph
-from Services.GatsService import try_to_build_gats_graphs_for_single
-from Services.GatsService import try_to_build_gats_graphs_for_multiple
 
 # Import Utility Constants
 from Utils.UtilitiesTestFilePathConstants import UtilitiesTestFilePathConstants
@@ -25,70 +27,38 @@ class LeituraManipulacaoDadosT:
         self.gats: Gats = Gats()
 
     @staticmethod
-    def read_session(path: str, graph: Graph, file_name: str):
+    def __read_session(path: str, graph: Graph, file_name: str):
         tree = get_tree_from_file_path(path)
         vertex_dictionary = get_tree_vertices_dictionary(tree)
         edge_dictionary = get_tree_edges_dictionary(tree, vertex_dictionary)
         edge_dictionary_filtered = filter_edge_dict_by_type_and_label(edge_dictionary, ACTIVITY)
         add_edges_to_graph(edge_dictionary_filtered, graph, file_name)
 
-    def print_graph(self):
-        self.gats.graph_gats.print_graph()
+    def __create_gats(self, path: str, file_name: str, loop: int):
+        self.__read_session(path, self.gats.graph_gats, file_name)
+        session_gats = self.gats
+        gats_graph = GatsGraph()
 
-    def read_session_and_create_gats(self, path: str, file_name: str, loop: int = None):
-        self.read_session(path, self.gats.graph_gats, file_name)
-        self.gats.add_graph_session(file_name)
+        """return gats_graph.create_gats_graph(session_gats, file_name, loop, True)"""
+        return gats_graph.create_gats_graph(session_gats, file_name, loop, False)
 
-        if not loop:
-            try_to_build_gats_graphs_for_single(self.gats.graph_gats, file_name)
-            self.gats = Gats()
-        else:
-            try_to_build_gats_graphs_for_multiple(self.gats.graph_gats, self.gats.sessions_list, loop)
-
+    def __add_gats_to_agats(self, gats_list: List[GatsGraph], path: str, file_name: str, loop: int):
+        gats_graph = self.__create_gats(path, file_name, loop)
+        gats_list.append(gats_graph)
         self.gats.graph_gats.empty_lists()
 
-    def read_single_session(self, path: str, file_name: str):
-        self.read_session_and_create_gats(path, file_name)
+    def __create_agats(self):
+        gats_list: List[GatsGraph] = []
+        self.__add_gats_to_agats(gats_list, UtilitiesTestFilePathConstants.NAMED_AREA_PATH_01, 'Single Gats Test 01', 1)
+        self.__add_gats_to_agats(gats_list, UtilitiesTestFilePathConstants.NAMED_AREA_PATH_02, 'Single Gats Test 02', 2)
+        self.__add_gats_to_agats(gats_list, UtilitiesTestFilePathConstants.NAMED_AREA_PATH_03, 'Single Gats Test 03', 3)
 
-    def read_multiple_sessions_with_no_bug(self):
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.PATH_01, 'Gats Test 01', 1)
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.PATH_02, 'Gats Test 02', 2)
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.PATH_03, 'Gats Test 03', 3)
-
-    def read_multiple_sessions_from_named_area_with_no_bug(self):
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.NAMED_AREA_PATH_01, 'Gats Test 01', 1)
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.NAMED_AREA_PATH_02, 'Gats Test 02', 2)
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.NAMED_AREA_PATH_03, 'Gats Test 03', 3)
-
-    def read_multiple_sessions_with_bug(self):
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.BUG_NAMED_PATH_01, 'Gats BUG Test 01', 1)
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.BUG_NAMED_PATH_02, 'Gats BUG Test 02', 2)
-        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.BUG_NAMED_PATH_03, 'Gats BUG Test 03', 3)
-
-    def read_multiple_sessions(self):
-        """Build with normal run"""
-        """self.read_multiple_sessions_with_no_bug()"""
-
-        """Clean gats for renamed regions and multiples runs"""
-        """self.gats = Gats()"""
-
-        """Build with normal run"""
-        self.read_multiple_sessions_from_named_area_with_no_bug()
-
-        """Clean gats for renamed regions and multiples runs"""
-        """self.gats = Gats()"""
-
-        """Build with bug run"""
-        """self.read_multiple_sessions_with_bug()"""
+        agats_graph = AGats()
+        agats_graph.create_agats(gats_list, 'AGats Test 01')
+        agats_graph.print_agats()
 
     def main(self):
-        """Multiple sessions reader"""
-        self.read_multiple_sessions()
-
-        """Single session reader"""
-        """self.read_single_session(BUG_NAMED_PATH_01, 'Gats BUG Test 01')
-        self.read_single_session(BUG_NAMED_PATH_02, 'Gats BUG Test 02')
-        self.read_single_session(BUG_NAMED_PATH_03, 'Gats BUG Test 03')"""
+        self.__create_agats()
 
 
 '''End of Class'''
