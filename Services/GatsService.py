@@ -32,7 +32,7 @@ def __create_dot_and_nodes_for_single_session(graph: Graph, file_name: str):
 
 
 def __create_colored_dot_edge(dot: Digraph, frequency: int, node_a: str, node_b: str, edge_color: str):
-    frequency_text: str = "Frequência: {}".format(frequency)
+    frequency_text: str = "Freq: {}".format(frequency)
     dot.edge(node_a, node_b, frequency_text,  color=edge_color, constraint='true')
 
 

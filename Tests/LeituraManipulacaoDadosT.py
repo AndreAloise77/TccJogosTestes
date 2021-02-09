@@ -13,13 +13,10 @@ from Services.ExtractProvDataService import add_edges_to_graph
 from Services.GatsService import try_to_build_gats_graphs_for_single
 from Services.GatsService import try_to_build_gats_graphs_for_multiple
 
+# Import Utility Constants
+from Utils.UtilitiesTestFilePathConstants import UtilitiesTestFilePathConstants
+
 # Constants
-PATH_01: str = 'C:/Users/silvi/Desktop/Angry Robot 3/Builds/Build 08_Data/Teste/02'
-PATH_02: str = 'C:/Users/silvi/Desktop/Angry Robot 3/Builds/Build 08_Data/Teste/01'
-PATH_03: str = 'C:/Users/silvi/Desktop/Angry Robot 3/Builds/Build 08_Data/Teste/03'
-BUG_NAMED_PATH_01: str = 'C:/Users/silvi/Desktop/Angry Robot 3/ProvFiles/01'
-BUG_NAMED_PATH_02: str = 'C:/Users/silvi/Desktop/Angry Robot 3/ProvFiles/02'
-BUG_NAMED_PATH_03: str = 'C:/Users/silvi/Desktop/Angry Robot 3/ProvFiles/03'
 ACTIVITY: str = 'Activity'
 
 
@@ -54,18 +51,29 @@ class LeituraManipulacaoDadosT:
         self.read_session_and_create_gats(path, file_name)
 
     def read_multiple_sessions_with_no_bug(self):
-        self.read_session_and_create_gats(PATH_01, 'Gats Test 01', 1)
-        self.read_session_and_create_gats(PATH_02, 'Gats Test 02', 2)
-        self.read_session_and_create_gats(PATH_03, 'Gats Test 03', 3)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.PATH_01, 'Gats Test 01', 1)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.PATH_02, 'Gats Test 02', 2)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.PATH_03, 'Gats Test 03', 3)
+
+    def read_multiple_sessions_from_named_area_with_no_bug(self):
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.NAMED_AREA_PATH_01, 'Gats Test 01', 1)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.NAMED_AREA_PATH_02, 'Gats Test 02', 2)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.NAMED_AREA_PATH_03, 'Gats Test 03', 3)
 
     def read_multiple_sessions_with_bug(self):
-        self.read_session_and_create_gats(BUG_NAMED_PATH_01, 'Gats BUG Test 01', 1)
-        self.read_session_and_create_gats(BUG_NAMED_PATH_02, 'Gats BUG Test 02', 2)
-        self.read_session_and_create_gats(BUG_NAMED_PATH_03, 'Gats BUG Test 03', 3)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.BUG_NAMED_PATH_01, 'Gats BUG Test 01', 1)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.BUG_NAMED_PATH_02, 'Gats BUG Test 02', 2)
+        self.read_session_and_create_gats(UtilitiesTestFilePathConstants.BUG_NAMED_PATH_03, 'Gats BUG Test 03', 3)
 
     def read_multiple_sessions(self):
         """Build with normal run"""
-        self.read_multiple_sessions_with_no_bug()
+        """self.read_multiple_sessions_with_no_bug()"""
+
+        """Clean gats for renamed regions and multiples runs"""
+        """self.gats = Gats()"""
+
+        """Build with normal run"""
+        self.read_multiple_sessions_from_named_area_with_no_bug()
 
         """Clean gats for renamed regions and multiples runs"""
         """self.gats = Gats()"""
