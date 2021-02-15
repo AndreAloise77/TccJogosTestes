@@ -77,6 +77,7 @@ def __create_colored_dot_edge(dot: Digraph, frequency: int, source_node: str, ta
     frequency_text: str = "Freq: {}".format(frequency)
     if is_respawn:
         e_color = edge_color + ':' + COLOR_RED
+        frequency_text = frequency_text + '\n, Respawn'
         dot.edge(source_node, target_node, frequency_text, color=e_color, constraint='true', style='dashed')
     else:
         dot.edge(source_node, target_node, frequency_text, color=edge_color, constraint='true')

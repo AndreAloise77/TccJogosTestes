@@ -40,7 +40,7 @@ class LeituraManipulacaoDadosT:
         gats_graph = GatsGraph()
 
         """return gats_graph.create_gats_graph(session_gats, file_name, loop, True)"""
-        return gats_graph.create_gats_graph(session_gats, file_name, loop, False)
+        return gats_graph.create_gats_graph(session_gats, file_name, loop, True)
 
     def __add_gats_to_agats(self, gats_list: List[GatsGraph], path: str, file_name: str, loop: int):
         gats_graph = self.__create_gats(path, file_name, loop)

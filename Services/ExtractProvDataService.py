@@ -14,6 +14,7 @@ from Utils.UtilitiesIO import get_single_file_in_dir
 # Constants:
 REGION = 'Region'
 EDGE_LABEL_NEUTRAL = 'Neutral'
+EDGE_LABEL_RESPAWNED = 'Respawned'
 ATTRIBUTE_NAME_OBJECT_NAME = 'ObjectName'
 ATTRIBUTE_VALUE_PLAYER = 'Player'
 RESPAWN = 'Respawn'
@@ -97,7 +98,9 @@ def filter_edge_dict_by_type_and_label(dictionary: Dict[str, ProvEdge], type_ele
     for index, key in enumerate(dictionary):
         edge = dictionary[key]
         is_edge_neutral = edge.label_element == EDGE_LABEL_NEUTRAL
-        if not is_edge_neutral:
+        is_edge_respawned = edge.label_element == EDGE_LABEL_RESPAWNED
+        is_valid: bool = is_edge_respawned or is_edge_neutral
+        if not is_valid:
             continue
         source_v = edge.source_vertex_id
         target_v = edge.target_vertex_id
