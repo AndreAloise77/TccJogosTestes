@@ -9,7 +9,7 @@ from Models.ProvEdge import ProvEdge
 from Utils.UtilitiesProvConstants import UtilitiesProvConstants
 
 # Import Utility Functions
-from Utils.UtilitiesIO import get_single_file_in_dir
+import Utils.UtilitiesIO
 
 # Constants:
 REGION = 'Region'
@@ -19,9 +19,16 @@ ATTRIBUTE_NAME_OBJECT_NAME = 'ObjectName'
 ATTRIBUTE_VALUE_PLAYER = 'Player'
 RESPAWN = 'Respawn'
 
+UTILITIES_IO = Utils.UtilitiesIO
+
 
 def get_tree_from_file_path(file_path: str):
-    file_tree = get_single_file_in_dir(file_path)
+    file_tree = UTILITIES_IO.get_single_file_in_dir(file_path)
+    return file_tree
+
+
+def get_tree_from_filename(file_name: str):
+    file_tree = UTILITIES_IO.build_tree_by_filename(file_name)
     return file_tree
 
 
