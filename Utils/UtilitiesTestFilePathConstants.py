@@ -1,8 +1,11 @@
 class UtilitiesTestFilePathConstants:
 
     # SAVED FILE PATH
+    GATS_FORMAT_FILE_STRUCTURE: str = '{}/{}/{}/{}{}'
+    AGATS_FORMAT_FILE_STRUCTURE: str = '{}/{}/{}{}'
     TEST_OUTPUT_PATH: str = 'test-output'
-    TEST_OUTPUT_GATS_PATH: str = 'gats'
+    TEST_OUTPUT_GATS_PATH: str = 'Gats'
+    TEST_OUTPUT_AGATS_PATH: str = 'A-Gats'
 
     # FILE EXTENSION
     GRAPHVIZ_EXTENSION_FILE: str = '.gv'
