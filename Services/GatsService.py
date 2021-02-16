@@ -11,6 +11,10 @@ COLOR_BLUE = 'blue'
 COLOR_BLACK = 'black'
 COLOR_RED = 'red'
 
+GRAPH_NODE_STYLE_FILLED: str = 'filled'
+GRAPH_EDGE_STYLE_DASHED: str = 'dashed'
+GRAPH_EDGE_CONSTRAINT_TRUE: str = 'true'
+
 
 def try_to_build_gats_graph(graph: Graph, file_name_list: List[str], loop: int, should_paint: bool):
     dot = __create_dot_and_nodes_for_gats_graph(graph, file_name_list, should_paint)
@@ -44,7 +48,7 @@ def __create_dot_and_nodes_for_gats_graph(graph: Graph, file_name_list: List[str
     node_name_list: List[str] = __get_node_name_form_graph(graph)
     for name_region in node_name_list:
         if should_paint and (name_region in graph.newVertexElements):
-            dot.node(name_region, name_region, style='filled', fillcolor=COLOR_GREEN)
+            dot.node(name_region, name_region, style=GRAPH_NODE_STYLE_FILLED, fillcolor=COLOR_GREEN)
         else:
             dot.node(name_region, name_region)
     return dot
@@ -78,6 +82,8 @@ def __create_colored_dot_edge(dot: Digraph, frequency: int, source_node: str, ta
     if is_respawn:
         e_color = edge_color + ':' + COLOR_RED
         frequency_text = frequency_text + '\n, Respawn'
-        dot.edge(source_node, target_node, frequency_text, color=e_color, constraint='true', style='dashed')
+        dot.edge(source_node, target_node, frequency_text,
+                 color=e_color, constraint=GRAPH_EDGE_CONSTRAINT_TRUE, style=GRAPH_EDGE_STYLE_DASHED)
     else:
-        dot.edge(source_node, target_node, frequency_text, color=edge_color, constraint='true')
+        dot.edge(source_node, target_node, frequency_text,
+                 color=edge_color, constraint=GRAPH_EDGE_CONSTRAINT_TRUE)
