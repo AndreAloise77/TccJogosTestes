@@ -25,10 +25,13 @@ class AGats:
                                   UtilitiesTestFilePathConstants.GRAPHVIZ_EXTENSION_FILE),
                           view=True)
 
-    def read_agats_from_file(self, file_name: str):
+    def export_agats_from_file(self, file_name: str):
+        self.__read_agats_from_file(file_name)
+        self.AGats.render(view=True)
+
+    def __read_agats_from_file(self, file_name: str):
         self.AGats = Source.from_file(UtilitiesTestFilePathConstants.AGATS_FORMAT_FILE_STRUCTURE
                                       .format(UtilitiesTestFilePathConstants.TEST_OUTPUT_PATH,
                                               UtilitiesTestFilePathConstants.TEST_OUTPUT_AGATS_PATH,
                                               file_name,
                                               UtilitiesTestFilePathConstants.GRAPHVIZ_EXTENSION_FILE))
-        self.AGats.render(view=True)
