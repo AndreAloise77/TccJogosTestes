@@ -12,7 +12,7 @@ class Graph:
         self.newVertexElements: List[str] = []
 
     def add_edge(self, source_vertex_region: str, target_vertex_region: str,
-                 file_name: str, is_edge_respawn: bool = False):
+                 file_name: str, is_edge_respawn: bool):
         key_value: str = source_vertex_region + '_' + target_vertex_region
         if key_value in self.edges:
             edge = self.edges.get(key_value)
