@@ -20,8 +20,14 @@ import Utils.UtilitiesIO
 ACTIVITY: str = 'Activity'
 DATE_FORMAT: str = '%Y-%m-%d_%H-%M-%S'
 PROV_FILES_DIRECTORY: str = 'Files/ProvFiles'
+PROV_FILES_NEW_DIRECTORY: str = 'Files/ProvFiles/New'
 INVALID_EDGES_FILES_DIRECTORY: str = 'Files/InvalidEdges'
 TEST_PROV_FILES_DIRECTORY: str = 'Files/ProvFiles/Test'
+INVALID_EDGES_FILE_NAME: str = 'invalid_edges.txt'
+HAS_INVALID_EDGES_MESSAGE: str = "O modelo possui alguma aresta (edge) inválida não informada? (S/s ou N/n): "
+HAS_INVALID_NODE_EDGES_MESSAGE: str = \
+    "Entre com os IDs das regiões (nodes) que possuem uma aresta (edge) inválida (Ex: 01 -> 02):"
+INVALID_ENTRY_MESSAGE: str = "Por favor, entre com uma resposta válida (S/s ou N/n)"
 
 
 class LeituraManipulacaoDadosT:
@@ -62,7 +68,8 @@ class LeituraManipulacaoDadosT:
         gats_graph = GatsGraph()
         gats_graph.set_current_time_to_folder(self.read_session_time)
 
-        gats = gats_graph.create_gats_graph(session_gats, agats_file_name, 1, True)
+        # True para exibir cores, False para não exibir as cores
+        gats = gats_graph.create_gats_graph(session_gats, agats_file_name, 1, False)
         gats_list: List[GatsGraph] = [gats]
 
         gats_file_path_list: List[str] = self.__create_gats_file_path_list(TEST_PROV_FILES_DIRECTORY)
@@ -78,12 +85,11 @@ class LeituraManipulacaoDadosT:
     @staticmethod
     def ask_for_invalid_edges_to_user():
         has_invalid_edge: bool = True
-        filename = 'invalid_edges.txt'
+        filename = INVALID_EDGES_FILE_NAME
         file_path_and_name = os.path.join(INVALID_EDGES_FILES_DIRECTORY, filename)
         with open(file_path_and_name, 'a') as file:
             while has_invalid_edge:
-                invalid_edge_response = \
-                    input("O modelo possui alguma aresta (edge) inválida não informada? (S/s ou N/n): ")
+                invalid_edge_response = input(HAS_INVALID_EDGES_MESSAGE)
 
                 has_invalid: bool = (invalid_edge_response == 'S') or (invalid_edge_response == 's')
                 has_valid: bool = (invalid_edge_response == 'N') or (invalid_edge_response == 'n')
@@ -92,16 +98,17 @@ class LeituraManipulacaoDadosT:
                     has_invalid_edge = False
 
                 elif has_invalid:
-                    invalid_edge = input("Entre com a aresta (edge) inválida (Ex: Region 01 -> Region 02):")
+                    invalid_edge = input(HAS_INVALID_NODE_EDGES_MESSAGE)
                     file.write(invalid_edge)
                     file.write('\n')
 
                 else:
-                    print("Por favor, entre com uma resposta válida (S/s ou N/n)")
+                    print(INVALID_ENTRY_MESSAGE)
 
     def __create_agats(self):
         gats_list: List[GatsGraph] = []
         gats_file_path_list: List[str] = self.__create_gats_file_path_list(PROV_FILES_DIRECTORY)
+        # gats_file_path_list: List[str] = self.__create_gats_file_path_list(PROV_FILES_NEW_DIRECTORY)
         for i in range(len(gats_file_path_list)):
             loop: int = i + 1
             file_name: str = 'Gats Test ' + str(loop)
