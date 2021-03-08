@@ -1,0 +1,11 @@
+// ['Gats Test 1']
+digraph {
+	"Terminal Room 01" [label="Terminal Room 01" fillcolor=green style=filled]
+	"Respawn room 01" [label="Respawn room 01" fillcolor=green style=filled]
+	"Sector 01" [label="Sector 01" fillcolor=green style=filled]
+	Generators [label=Generators fillcolor=green style=filled]
+	"Research Lab 02" [label="Research Lab 02" fillcolor=green style=filled]
+	"Terminal Room 01" -> "Respawn room 01" [label="Freq: 2" color=blue constraint=true]
+	"Sector 01" -> Generators [label="Freq: 1" color=blue constraint=true]
+	"Sector 01" -> "Research Lab 02" [label="Freq: 1" color=blue constraint=true]
+}

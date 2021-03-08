@@ -63,42 +63,75 @@ def try_to_build_gats_graph(graph: Graph, file_name_list: List[str], loop: int, 
             invalid_edges_list: List[str] = \
                 __read_invalid_edges_file(UtilitiesTestFilePathConstants.INVALID_EDGE_FILENAME)
 
-            invalid_source_region_list = __get_source_region_form_invalid_edges_list(invalid_edges_list)
-            invalid_target_region_list = __get_target_region_form_invalid_edges_list(invalid_edges_list)
+            invalid_source_id_list = __get_source_region_form_invalid_edges_list(invalid_edges_list)
+            invalid_target_id_list = __get_target_region_form_invalid_edges_list(invalid_edges_list)
 
-            if (source_region in invalid_source_region_list) and (target_region in invalid_target_region_list):
+            node_vertices = graph.vertices_to_node
+
+            invalid_source_region_list_by_id = \
+                __get_invalid_regions_by_invalid_id_list(invalid_source_id_list, node_vertices)
+
+            invalid_target_region_list_by_id = \
+                __get_invalid_regions_by_invalid_id_list(invalid_target_id_list, node_vertices)
+
+            if (source_region in invalid_source_region_list_by_id) and (target_region in
+                                                                        invalid_target_region_list_by_id):
                 __create_invalid_dot_edge(dot, edge_frequency, source_region, target_region)
 
             elif key_value in common_edges:
                 """Caminho em comum para todas as sessions"""
                 __create_colored_dot_edge(dot, edge_frequency, source_region, target_region, COLOR_BLUE, is_respawn)
-            elif key_value in graph.newEdgeElements:
-                """Caminho novo para a ultima session"""
-                __create_colored_dot_edge(dot, edge_frequency, source_region, target_region, COLOR_GREEN, is_respawn)
+            # elif key_value in graph.newEdgeElements:
+            #     """Caminho novo para a ultima session"""
+            #     __create_colored_dot_edge(dot, edge_frequency, source_region, target_region, COLOR_GREEN, is_respawn)
             else:
                 """Somente um caminho que não é novo, comum ou respawn"""
                 __create_colored_dot_edge(dot, edge_frequency, source_region, target_region, COLOR_BLACK, is_respawn)
     return dot
 
 
+def __get_invalid_regions_by_invalid_id_list(invalid_id_list: List[str], node_vertices: Dict[int, str]):
+    source_region_list: List[str] = []
+    for invalid_id in invalid_id_list:
+        id_int: int = int(invalid_id)
+        if id_int in node_vertices:
+            region = node_vertices[id_int]
+            source_region_list.append(region)
+
+    return source_region_list
+
+
 def __create_dot_and_nodes_for_gats_graph(graph: Graph, file_name_list: List[str], should_paint: bool):
     file_name: str = str(file_name_list)
+    graph.add_id_to_vertex()
     dot = Digraph(comment=file_name)
-    node_name_list: List[str] = __get_node_name_form_graph(graph)
-    for name_region in node_name_list:
-        if should_paint and (name_region in graph.newVertexElements):
-            dot.node(name_region, name_region, style=GRAPH_NODE_STYLE_FILLED, fillcolor=COLOR_GREEN)
-        else:
-            dot.node(name_region, name_region)
+    # node_name_list: List[str] = __get_node_name_form_graph(graph)
+    # node_name_list: Dict[int, str] = __get_node_name_form_graph(graph)
+    node_dict: Dict[int, str] = graph.vertices_to_node
+    # for name_region in node_name_list:
+    #     if should_paint and (name_region in graph.newVertexElements):
+    #         dot.node(name_region, name_region, style=GRAPH_NODE_STYLE_FILLED, fillcolor=COLOR_GREEN)
+    #     else:
+    #         dot.node(name_region, name_region)
+    for node_id in node_dict:
+        named_node: str = '{}'.format(node_id)
+        named_region: str = node_dict[node_id]
+        named_node_region: str = "Id: {} - {}".format(named_node, named_region)
+        dot.node(named_region, named_node_region)
     return dot
 
 
 def __get_node_name_form_graph(graph: Graph):
     vertex_dict = graph.vertices
-    v_list: List[str] = []
+    # v_list: List[str] = []
+    v_dict: Dict[int, str] = {}
+    id_node: int = 1
     for region in vertex_dict:
-        v_list.append(region)
-    return v_list
+        # v_list.append(region)
+        v_dict[id_node] = region
+        id_node += 1
+    # return v_list
+    return v_dict
 
 
 def __get_common_edges(graph: Graph, file_name_list: List[str], loop: int):

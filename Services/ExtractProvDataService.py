@@ -14,7 +14,7 @@ import Utils.UtilitiesIO
 # Constants:
 REGION = 'Region'
 EDGE_LABEL_NEUTRAL = 'Neutral'
-EDGE_LABEL_RESPAWNED = 'Respawned'
+# EDGE_LABEL_RESPAWNED = 'Respawned'
 ATTRIBUTE_NAME_OBJECT_NAME = 'ObjectName'
 ATTRIBUTE_VALUE_PLAYER = 'Player'
 RESPAWN = 'Respawn'
@@ -105,9 +105,11 @@ def filter_edge_dict_by_type_and_label(dictionary: Dict[str, ProvEdge], type_ele
     for index, key in enumerate(dictionary):
         edge = dictionary[key]
         is_edge_neutral = edge.label_element == EDGE_LABEL_NEUTRAL
-        is_edge_respawned = edge.label_element == EDGE_LABEL_RESPAWNED
-        is_valid: bool = is_edge_respawned or is_edge_neutral
-        if not is_valid:
+        # is_edge_respawned = edge.label_element == EDGE_LABEL_RESPAWNED
+        # is_valid: bool = is_edge_respawned or is_edge_neutral
+        # is_valid: bool = is_edge_respawned or is_edge_neutral
+        # if not is_valid:
+        if not is_edge_neutral:
             continue
         source_v = edge.source_vertex_id
         target_v = edge.target_vertex_id
@@ -146,9 +148,10 @@ def __get_region_from_vertex(vertex: ProvVertex):
 def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
     source_vertex = edge.source_vertex_id
     source_region = __get_region_from_vertex(source_vertex)
+    label_s = source_vertex.label_element
+
     target_vertex = edge.target_vertex_id
     target_region = __get_region_from_vertex(target_vertex)
-    label_s = source_vertex.label_element
     label_t = target_vertex.label_element
 
     has_valid_source_region: bool = source_region is not None
@@ -156,13 +159,17 @@ def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
     has_valid_regions: bool = has_valid_source_region and has_valid_target_region
 
     if has_valid_regions and (source_region != target_region):
-        if (label_s != label_t) and (label_t == RESPAWN or label_s == RESPAWN):
+        if label_s != label_t and (label_t == RESPAWN or label_s == RESPAWN):
+            # print("Label: {}, Source: {}, Target: {}".format(edge.label_element, target_region, source_region))
+            # if edge.label_element != EDGE_LABEL_RESPAWNED:
             graph.add_edge(target_region, source_region, file_name, True)
+
         else:
             graph.add_edge(target_region, source_region, file_name, False)
 
 
 def add_edges_to_graph(dict_edge: Dict[str, ProvEdge], graph: Graph, file_name: str):
+
     for index_enum, key_dict in enumerate(dict_edge):
         edge = dict_edge[key_dict]
         __try_add_edge_to_graph(edge, graph, file_name)

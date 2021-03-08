@@ -1,0 +1,13 @@
+// ['Gats Test 1', 'Gats Test 2', 'Gats Test 3']
+digraph {
+	"Terminal Room 01" [label="Terminal Room 01"]
+	"Respawn room 01" [label="Respawn room 01"]
+	"Sector 01" [label="Sector 01"]
+	Generators [label=Generators]
+	"Research Lab 02" [label="Research Lab 02"]
+	"Balcony 02" [label="Balcony 02"]
+	"Terminal Room 01" -> "Respawn room 01" [label="Freq: 2" color=black constraint=true]
+	"Sector 01" -> Generators [label="Freq: 2" color=black constraint=true]
+	"Sector 01" -> "Research Lab 02" [label="Freq: 2" color=black constraint=true]
+	"Balcony 02" -> "Respawn room 01" [label="Freq: 2" color=black constraint=true]
+}

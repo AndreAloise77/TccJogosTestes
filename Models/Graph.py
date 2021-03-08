@@ -10,6 +10,7 @@ class Graph:
         self.vertices: Dict[str, GraphVertex] = {}
         self.newEdgeElements: List[str] = []
         self.newVertexElements: List[str] = []
+        self.vertices_to_node: Dict[int, str] = {}
 
     def add_edge(self, source_vertex_region: str, target_vertex_region: str,
                  file_name: str, is_edge_respawn: bool):
@@ -48,3 +49,9 @@ class Graph:
     def print_edge_list(self):
         print(self.newEdgeElements)
         print(self.newVertexElements)
+
+    def add_id_to_vertex(self):
+        id_vertex: int = 1
+        for region in self.vertices:
+            self.vertices_to_node[id_vertex] = region
+            id_vertex += 1
