@@ -47,9 +47,10 @@ COLON: str = ':'
 
 
 def try_to_build_gats_graph(graph: Graph, file_name_list: List[str], loop: int, should_paint: bool):
-    dot = __create_dot_and_nodes_for_gats_graph(graph, file_name_list, should_paint)
+    dot = __create_dot_and_nodes_for_gats_graph(graph, file_name_list)
     common_edges: List[str] = __get_common_edges(graph, file_name_list, loop)
     gats_edge_dict: Dict[str, GraphEdge] = graph.get_edges()
+
     for key_value in gats_edge_dict:
         id_node_value: str = key_value
         gats_edge_vertex_regions: List[str] = id_node_value.split('_')
@@ -57,9 +58,12 @@ def try_to_build_gats_graph(graph: Graph, file_name_list: List[str], loop: int, 
         target_region: str = gats_edge_vertex_regions[1]
         edge_frequency: int = gats_edge_dict[id_node_value].frequency
         is_respawn = gats_edge_dict[id_node_value].is_respawn
+
         if not should_paint:
             __create_colorless_dot_edge(dot, edge_frequency, source_region, target_region)
+
         else:
+            # Criando lógica para os caminhos inválidos
             invalid_edges_list: List[str] = \
                 __read_invalid_edges_file(UtilitiesTestFilePathConstants.INVALID_EDGE_FILENAME)
 
@@ -79,13 +83,10 @@ def try_to_build_gats_graph(graph: Graph, file_name_list: List[str], loop: int, 
                 __create_invalid_dot_edge(dot, edge_frequency, source_region, target_region)
 
             elif key_value in common_edges:
-                """Caminho em comum para todas as sessions"""
+                # Caminho em comum para todas as sessions
                 __create_colored_dot_edge(dot, edge_frequency, source_region, target_region, COLOR_BLUE, is_respawn)
-            # elif key_value in graph.newEdgeElements:
-            #     """Caminho novo para a ultima session"""
-            #     __create_colored_dot_edge(dot, edge_frequency, source_region, target_region, COLOR_GREEN, is_respawn)
             else:
-                """Somente um caminho que não é novo, comum ou respawn"""
+                # Demais caminhos
                 __create_colored_dot_edge(dot, edge_frequency, source_region, target_region, COLOR_BLACK, is_respawn)
     return dot
 
@@ -101,18 +102,11 @@ def __get_invalid_regions_by_invalid_id_list(invalid_id_list: List[str], node_ve
     return source_region_list
 
 
-def __create_dot_and_nodes_for_gats_graph(graph: Graph, file_name_list: List[str], should_paint: bool):
+def __create_dot_and_nodes_for_gats_graph(graph: Graph, file_name_list: List[str]):
     file_name: str = str(file_name_list)
     graph.add_id_to_vertex()
     dot = Digraph(comment=file_name)
-    # node_name_list: List[str] = __get_node_name_form_graph(graph)
-    # node_name_list: Dict[int, str] = __get_node_name_form_graph(graph)
     node_dict: Dict[int, str] = graph.vertices_to_node
-    # for name_region in node_name_list:
-    #     if should_paint and (name_region in graph.newVertexElements):
-    #         dot.node(name_region, name_region, style=GRAPH_NODE_STYLE_FILLED, fillcolor=COLOR_GREEN)
-    #     else:
-    #         dot.node(name_region, name_region)
     for node_id in node_dict:
         named_node: str = '{}'.format(node_id)
         named_region: str = node_dict[node_id]
@@ -123,14 +117,11 @@ def __create_dot_and_nodes_for_gats_graph(graph: Graph, file_name_list: List[str
 
 def __get_node_name_form_graph(graph: Graph):
     vertex_dict = graph.vertices
-    # v_list: List[str] = []
     v_dict: Dict[int, str] = {}
     id_node: int = 1
     for region in vertex_dict:
-        # v_list.append(region)
         v_dict[id_node] = region
         id_node += 1
-    # return v_list
     return v_dict
 
 
