@@ -143,7 +143,7 @@ def __get_region_from_vertex(vertex: ProvVertex):
     return region
 
 
-def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str, edge_id: int):
+def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
     source_vertex = edge.source_vertex_id
     source_region = __get_region_from_vertex(source_vertex)
     target_vertex = edge.target_vertex_id
@@ -163,9 +163,7 @@ def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str, edge_i
 
 
 def add_edges_to_graph(dict_edge: Dict[str, ProvEdge], graph: Graph, file_name: str):
-    edge_id: int = 1
     for index_enum, key_dict in enumerate(dict_edge):
         edge = dict_edge[key_dict]
-        __try_add_edge_to_graph(edge, graph, file_name, edge_id)
-        edge_id += 1
+        __try_add_edge_to_graph(edge, graph, file_name)
 
