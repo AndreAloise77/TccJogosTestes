@@ -143,7 +143,7 @@ def __get_region_from_vertex(vertex: ProvVertex):
     return region
 
 
-def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
+def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str, edge_id: int):
     source_vertex = edge.source_vertex_id
     source_region = __get_region_from_vertex(source_vertex)
     target_vertex = edge.target_vertex_id
@@ -151,13 +151,21 @@ def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
     label_s = source_vertex.label_element
     label_t = target_vertex.label_element
 
-    if source_region != target_region:
+    has_valid_source_region: bool = source_region is not None
+    has_valid_target_region: bool = target_region is not None
+    has_valid_regions: bool = has_valid_source_region and has_valid_target_region
+
+    if has_valid_regions and (source_region != target_region):
         if (label_s != label_t) and (label_t == RESPAWN or label_s == RESPAWN):
             graph.add_edge(target_region, source_region, file_name, True)
-        graph.add_edge(target_region, source_region, file_name)
+        else:
+            graph.add_edge(target_region, source_region, file_name, False)
 
 
 def add_edges_to_graph(dict_edge: Dict[str, ProvEdge], graph: Graph, file_name: str):
+    edge_id: int = 1
     for index_enum, key_dict in enumerate(dict_edge):
         edge = dict_edge[key_dict]
-        __try_add_edge_to_graph(edge, graph, file_name)
+        __try_add_edge_to_graph(edge, graph, file_name, edge_id)
+        edge_id += 1
+
