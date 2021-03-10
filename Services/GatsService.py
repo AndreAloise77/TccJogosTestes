@@ -1,4 +1,5 @@
 # Import System Objects
+import os
 from typing import Dict, List
 
 # Import Graphviz
@@ -11,10 +12,12 @@ from Models.GraphEdge import GraphEdge
 from Models.GraphVertex import GraphVertex
 
 # Constants
+from Utils import UtilitiesIO
 from Utils.UtilitiesTestFilePathConstants import UtilitiesTestFilePathConstants
 
 UNDERLINE_SEPARATOR: str = '_'
 FREQUENCY_TEXT_TO_GRAPH: str = 'Freq: {}'
+FILENAME: str = 'common_edges.txt'
 
 # CONSTANTS TO ADD COLOR TO NODES AND EDGES
 COLOR_GREEN = 'green'
@@ -46,9 +49,65 @@ COMMA_WITH_RESPAWNED_INDICATOR: str = ', Resp'
 COLON: str = ':'
 
 
-def try_to_build_gats_graph(graph: Graph, file_name_list: List[str], loop: int, should_paint: bool):
+def __export_common_edges_list_to_file(common_edges: List[str]):
+    file_path_and_name = os.path.join(UtilitiesTestFilePathConstants.COMMON_EDGES_FILE_DIRECTORY, FILENAME)
+    with open(file_path_and_name, 'w') as file:
+        for edge in common_edges:
+            file.write(edge)
+            file.write('\n')
+
+
+def __read_common_edges_list_from_file():
+    file = open(UtilitiesTestFilePathConstants.COMMON_EDGES_FILE_STRUCTURE
+                .format(UtilitiesTestFilePathConstants.COMMON_EDGES_FILE_DIRECTORY, FILENAME))
+
+    common_edges: List[str] = file.readlines()
+    formatted_common_edges = [s.replace("\n", "") for s in common_edges]
+    return formatted_common_edges
+
+
+def __compare_edge_list_with_file_and_return_common_edges(graph: Graph, file_edge_list: List[str]):
+    graph_edge_dict = graph.edges
+    if len(graph_edge_dict) > len(file_edge_list):
+        return file_edge_list
+
+    common_edges: List[str] = []
+    for value_key in graph_edge_dict:
+        if value_key not in file_edge_list:
+            return file_edge_list
+        common_edges.append(value_key)
+
+    if len(common_edges) <= len(file_edge_list):
+        return common_edges
+
+
+def __read_from_temp_file():
+    file = open(UtilitiesTestFilePathConstants.COMMON_EDGES_FILE_STRUCTURE
+                .format(UtilitiesTestFilePathConstants.COMMON_EDGES_FILE_DIRECTORY,
+                        UtilitiesTestFilePathConstants.COMMON_EDGES_FILENAME_TEMP))
+
+    response: str = file.read()
+    return response
+
+
+def try_to_build_gats_graph(graph: Graph, file_name_list: List[str], loop: int,
+                            should_paint: bool, should_read_common_edges: bool):
     dot = __create_dot_and_nodes_for_gats_graph(graph, file_name_list)
-    common_edges: List[str] = __get_common_edges(graph, file_name_list, loop)
+    common_edges: List[str]
+
+    if should_read_common_edges:
+        common_edges = __read_common_edges_list_from_file()
+        UtilitiesIO.write_on_temp_file(True, UtilitiesTestFilePathConstants.COMMON_EDGES_FILE_DIRECTORY,
+                                       UtilitiesTestFilePathConstants.COMMON_EDGES_FILENAME_TEMP)
+    else:
+        read_from_file: str = __read_from_temp_file()
+        if read_from_file == 'True':
+            old_common_edges = __read_common_edges_list_from_file()
+            common_edges = __compare_edge_list_with_file_and_return_common_edges(graph, old_common_edges)
+        else:
+            common_edges = __get_common_edges(graph, file_name_list, loop)
+
+    __export_common_edges_list_to_file(common_edges)
     gats_edge_dict: Dict[str, GraphEdge] = graph.get_edges()
 
     for key_value in gats_edge_dict:
@@ -253,16 +312,7 @@ def __create_graph_edge_from_edge_file_list(edge_lines: List[str], file_name: st
             freq_value = freq_info_list[1].replace(QUOTATION_MARK, '')
             edge_freq = int(freq_value)
 
-        source_graph_vertex: GraphVertex = GraphVertex(source_vertex_region)
-        target_graph_vertex: GraphVertex = GraphVertex(target_vertex_region)
-
-        graph_edge: GraphEdge = GraphEdge(source_graph_vertex, target_graph_vertex, file_name, is_respawn)
-        graph_edge.frequency = edge_freq
-
-        key_value: str = source_vertex_region + UNDERLINE_SEPARATOR + target_vertex_region
-
-        graph.edges[key_value] = graph_edge
-        graph.newEdgeElements.append(key_value)
+        graph.add_edge_from_file(source_vertex_region, target_vertex_region, file_name, is_respawn, edge_freq)
 
 
 def __create_graph_node_from_node_file_list(node_lines: List[str], graph: Graph):
@@ -278,7 +328,7 @@ def __create_graph_node_from_node_file_list(node_lines: List[str], graph: Graph)
         graph.newVertexElements.append(node_name)
 
 
-def create_gats_form_agats_file(file_name: str, gats: Gats):
+def create_gats_from_agats_file(file_name: str, gats: Gats):
     file_lines_list: List[str] = __read_agats_from_file(file_name)
 
     edge_lines: List[str] = []
