@@ -1,0 +1,14 @@
+Entrance_Passage 01
+Passage 01_Observation Deck
+Observation Deck_Corridor 01
+Corridor 01_Terminal Room 01
+Corridor 01_Corridor 02
+Corridor 02_Sector 01
+Research Lab 02_Access Room
+Access Room_Bedroom
+Bedroom_Corridor 04
+Corridor 04_Observatory
+Observatory_Corridor 04
+Corridor 04_Bedroom
+Bedroom_Access Room
+Access Room_Sector 02
