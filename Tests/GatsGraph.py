@@ -13,10 +13,12 @@ class GatsGraph:
         self.gats_graph: Digraph = Digraph()
         self.session_folder_name: str = ''
 
-    def create_gats_graph(self, gats: Gats, file_name: str, loop: int, should_paint: bool):
+    def create_gats_graph(self, gats: Gats, file_name: str, loop: int,
+                          should_paint: bool, should_read_common_edges: bool):
         gats.add_graph_session(file_name)
         graph_gats = gats.graph_gats
-        self.gats_graph = GATS_SERVICE.try_to_build_gats_graph(graph_gats, gats.sessions_list, loop, should_paint)
+        self.gats_graph = GATS_SERVICE.try_to_build_gats_graph(graph_gats, gats.sessions_list, loop,
+                                                               should_paint, should_read_common_edges)
         self.__generate_gats_dot_file(file_name)
         return self.gats_graph
 
