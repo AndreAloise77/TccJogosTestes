@@ -4,13 +4,16 @@ class UtilitiesTestFilePathConstants:
     GATS_FORMAT_FILE_STRUCTURE: str = '{}/{}/{}/{}{}'
     AGATS_FORMAT_FILE_STRUCTURE: str = '{}/{}/{}{}'
     INVALID_EDGES_FILES_STRUCTURE: str = '{}/{}{}'
+    COMMON_EDGES_FILE_STRUCTURE: str = '{}/{}'
     TEST_OUTPUT_PATH: str = 'test-output'
     TEST_OUTPUT_GATS_PATH: str = 'Gats'
     TEST_OUTPUT_AGATS_PATH: str = 'A-Gats'
     INVALID_EDGES_FILES_DIRECTORY: str = 'Files/InvalidEdges'
+    COMMON_EDGES_FILE_DIRECTORY: str = 'Files/CommonEdges'
 
     # FILE NAME
     INVALID_EDGE_FILENAME: str = 'invalid_edges'
+    COMMON_EDGES_FILENAME_TEMP: str = 'common_edges_temp.txt'
 
     # FILE EXTENSION
     GRAPHVIZ_EXTENSION_FILE: str = '.gv'

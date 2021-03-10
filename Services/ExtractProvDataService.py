@@ -169,7 +169,6 @@ def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
 
 
 def add_edges_to_graph(dict_edge: Dict[str, ProvEdge], graph: Graph, file_name: str):
-
     for index_enum, key_dict in enumerate(dict_edge):
         edge = dict_edge[key_dict]
         __try_add_edge_to_graph(edge, graph, file_name)

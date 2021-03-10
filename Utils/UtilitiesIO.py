@@ -46,3 +46,10 @@ def get_tree_root_returns_element(path: str):
     complete_tree = get_single_file_in_dir(path)
     root_tree = complete_tree.getroot()
     return root_tree
+
+
+def write_on_temp_file(had_read_edge_file: bool, directory: str, file_name: str):
+    data: str = str(had_read_edge_file)
+    file_path_and_name = os.path.join(directory, file_name)
+    with open(file_path_and_name, 'w') as file:
+        file.write(data)
