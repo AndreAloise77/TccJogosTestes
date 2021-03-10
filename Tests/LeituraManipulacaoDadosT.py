@@ -15,8 +15,11 @@ import Services.GatsService
 
 # Import Utility Constants
 import Utils.UtilitiesIO
+from Utils.UtilitiesTestFilePathConstants import UtilitiesTestFilePathConstants
 
 # Constants
+from Utils import UtilitiesIO
+
 ACTIVITY: str = 'Activity'
 DATE_FORMAT: str = '%Y-%m-%d_%H-%M-%S'
 PROV_FILES_DIRECTORY: str = 'Files/ProvFiles'
@@ -52,7 +55,9 @@ class LeituraManipulacaoDadosT:
         gats_graph.set_current_time_to_folder(self.read_session_time)
 
         # True para exibir cores, False para não exibir as cores
-        gats = gats_graph.create_gats_graph(session_gats, file_name, loop, True)
+        should_paint: bool = True
+        should_read_common_edges: bool = False
+        gats = gats_graph.create_gats_graph(session_gats, file_name, loop, should_paint, should_read_common_edges)
         return gats
 
     def __add_gats_to_agats(self, gats_list: List[GatsGraph], path: str, file_name: str, loop: int):
@@ -62,14 +67,16 @@ class LeituraManipulacaoDadosT:
 
     def __create_agats_from_file(self, agats_file_name):
         gats_service = Services.GatsService
-        self.gats = gats_service.create_gats_form_agats_file(agats_file_name, self.gats)
+        self.gats = gats_service.create_gats_from_agats_file(agats_file_name, self.gats)
 
         session_gats = self.gats
         gats_graph = GatsGraph()
         gats_graph.set_current_time_to_folder(self.read_session_time)
 
         # True para exibir cores, False para não exibir as cores
-        gats = gats_graph.create_gats_graph(session_gats, agats_file_name, 1, False)
+        should_paint: bool = True
+        should_read_common_edges: bool = True
+        gats = gats_graph.create_gats_graph(session_gats, agats_file_name, 1, should_paint, should_read_common_edges)
         gats_list: List[GatsGraph] = [gats]
 
         gats_file_path_list: List[str] = self.__create_gats_file_path_list(TEST_PROV_FILES_DIRECTORY)
@@ -81,6 +88,9 @@ class LeituraManipulacaoDadosT:
         agats_graph = AGats()
         agats_graph.create_agats(gats_list, agats_file_name)
         agats_graph.export_agats()
+        UtilitiesIO.write_on_temp_file(False, UtilitiesTestFilePathConstants.COMMON_EDGES_FILE_DIRECTORY,
+                                       UtilitiesTestFilePathConstants.COMMON_EDGES_FILENAME_TEMP)
+        self.ask_for_invalid_edges_to_user()
 
     @staticmethod
     def ask_for_invalid_edges_to_user():
@@ -135,8 +145,8 @@ class LeituraManipulacaoDadosT:
         str_time = time.strftime(DATE_FORMAT)
         self.read_session_time = str_time
 
-        self.__create_agats()
-        # self.__create_agats_from_file('AGats Test 01')
+        # self.__create_agats()
+        self.__create_agats_from_file('AGats Test 01')
         # self.__read_agats_from_file()
 
 
