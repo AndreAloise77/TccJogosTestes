@@ -63,7 +63,7 @@ def get_tree_root_returns_element(path: str):
 
 def read_invalid_edges_file(invalid_file_name: str) -> List[str]:
     file = open(UTILITIES_CONSTANTS.INVALID_EDGES_FILES_STRUCTURE
-                .format(UTILITIES_CONSTANTS.INVALID_EDGES_FILES_DIRECTORY,
+                .format(UTILITIES_CONSTANTS.READ_INVALID_EDGES_FILES_DIRECTORY,
                         invalid_file_name,
                         UTILITIES_CONSTANTS.TEXT_EXTENSION_FILE))
 
@@ -85,8 +85,8 @@ def __clean_list(file_list: List[str]):
 
 
 def import_agats_file_to_list(path: str, folder_name: str, file_name: str) -> List[str]:
-    file = open(path.format(UTILITIES_CONSTANTS.TEST_OUTPUT_PATH,
-                            UTILITIES_CONSTANTS.TEST_OUTPUT_AGATS_PATH,
+    file = open(path.format(UTILITIES_CONSTANTS.OUTPUT_PATH,
+                            UTILITIES_CONSTANTS.OUTPUT_AGATS_PATH,
                             folder_name, file_name,
                             UTILITIES_CONSTANTS.GRAPHVIZ_EXTENSION_FILE))
 
@@ -100,7 +100,7 @@ def write_on_invalid_file(invalid_edge_ids: str):
     is_unique: bool = invalid_edge_ids not in invalid_list
     if is_unique:
         file_name = '{}{}'.format(filename, UTILITIES_CONSTANTS.TEXT_EXTENSION_FILE)
-        file_path_and_name = os.path.join(UTILITIES_CONSTANTS.INVALID_EDGES_FILES_DIRECTORY, file_name)
+        file_path_and_name = os.path.join(UTILITIES_CONSTANTS.READ_INVALID_EDGES_FILES_DIRECTORY, file_name)
         with open(file_path_and_name, 'a') as file:
             file.write(invalid_edge_ids)
             file.write('\n')
@@ -111,3 +111,20 @@ def write_on_temp_file(had_read_edge_file: bool, directory: str, file_name: str)
     file_path_and_name = os.path.join(directory, file_name)
     with open(file_path_and_name, OPEN_FILE_TO_OVERRIDE) as file:
         file.write(data)
+
+
+def get_dir_base_name(path):
+    folder_name = __get_sub_dir(path)
+    base_name = os.path.basename(folder_name)
+    return base_name
+
+
+def __get_sub_dir(directory):
+    folders: List[str] = []
+    for x in os.walk(directory):
+        folders.append(x[0])
+
+    if len(folders) > 0:
+        return folders[-1]
+    else:
+        raise Exception("There are no folders on Directory: '{}'".format(directory))
