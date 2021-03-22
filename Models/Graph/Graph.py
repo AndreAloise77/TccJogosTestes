@@ -1,15 +1,14 @@
 from typing import Dict, List
 
-from Interface.GraphVizInterface import GraphVizInterface
-
 # Import Utilities
 import Utils.UtilitiesProvConstants
-from Models.Graph import GraphEdge
-from Models.Graph import GraphVertex
+from Interface.GraphVizInterface import GraphVizInterface
+# Constants
+from Models.Graph.GraphEdge import GraphEdge
+from Models.Graph.GraphVertex import GraphVertex
 from Models.Provenience.ProvEdge import ProvEdge
 from Models.Provenience.ProvVertex import ProvVertex
 
-# Constants
 UTILITIES_CONSTANTS = Utils.UtilitiesProvConstants.UtilitiesProvConstants
 UNDERSCORE: str = '_'
 

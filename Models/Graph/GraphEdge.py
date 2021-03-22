@@ -1,7 +1,7 @@
 from typing import List
 
 # CONSTANTS
-from Models.Graph.Graph import GraphVertex
+from Models.Graph.GraphVertex import GraphVertex
 
 UNDERSCORE: str = '_'
 
