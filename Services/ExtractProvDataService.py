@@ -1,7 +1,7 @@
 # Import System Struct Objects
-from typing import Dict, List
 from os import listdir
 from os.path import isfile, isdir, join
+from typing import Dict, List
 # Import Utilities
 from xml.etree.ElementTree import ElementTree
 
