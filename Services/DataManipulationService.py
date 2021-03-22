@@ -1,17 +1,17 @@
 import os
 from datetime import datetime
 from typing import Dict, List
-# Import Models
+# Import Tree
 from xml.etree.ElementTree import ElementTree
 
 # Import Services
 import Services.AGatsService
 import Services.ExtractProvDataService
 import Services.GatsService
-import Utils.UtilitiesFilePathConstants
-import Utils.UtilitiesIO
 # Import Utils
 import Utils.UtilitiesProvConstants
+import Utils.UtilitiesFilePathConstants
+import Utils.UtilitiesIO
 # Import Models
 from Models.Graph.AGats import AGats
 from Models.Graph.Gats import Gats
@@ -25,13 +25,10 @@ EXTRACT_PROV_DATA_SERVICE = Services.ExtractProvDataService
 GATS_SERVICE = Services.GatsService
 
 UTILITIES_CONSTANTS = Utils.UtilitiesProvConstants.UtilitiesProvConstants
-UTILITIES_IOS = Utils.UtilitiesIO
+UTILITIES_IO = Utils.UtilitiesIO
 UTILITIES_FILE_PATH_CONSTANTS = Utils.UtilitiesFilePathConstants.UtilitiesFilePathConstants
 
 DATE_FORMAT: str = '%Y-%m-%d_%H-%M-%S'
-PROV_FILES_DIRECTORY: str = 'Files/ProvFiles'
-NEW_PROV_FILES_DIRECTORY: str = 'Files/ProvFiles/New'
-EXPORTED_GATS_FILENAME_STRUCTURE: str = 'Gats {} from {}'
 
 HAS_INVALID_EDGES_MESSAGE: str = "O modelo possui alguma aresta (edge) inválida não informada? (S/s ou N/n): "
 HAS_INVALID_NODE_EDGES_MESSAGE: str = \
@@ -48,14 +45,16 @@ class DataManipulationService:
         self.read_session_time: str = ''
 
     def main(self):
-        self.create_agats()
-        # self.import_agats()
+        # self.create_agats()
+        self.import_agats()
+        self.__show_lines_on_all_projects()
 
     def create_agats(self):
         self.__set_session_time()
         loop: int = 1
         session_list: List[str] = []
-        gats_to_agats: Gats = self.__create_gats(loop, PROV_FILES_DIRECTORY, session_list)
+        gats_to_agats: Gats = \
+            self.__create_gats(loop, UTILITIES_FILE_PATH_CONSTANTS.READ_PROV_FILES_DIRECTORY, session_list)
 
         agats: AGats = AGats()
         agats.graph_agats = gats_to_agats.graph_gats
@@ -70,13 +69,13 @@ class DataManipulationService:
 
     def import_agats(self):
         self.__set_session_time()
-        folder_name_to_read: str = '2021-03-18_04-02-30'
+        folder_name_to_read: str = \
+            UTILITIES_IO.get_dir_base_name(UTILITIES_FILE_PATH_CONSTANTS.READ_OUT_PUT_AGATS_DIRECTORY)
         agats: AGats = AGats()
         agats.folder_name = folder_name_to_read
 
-        path_structure: str = UTILITIES_FILE_PATH_CONSTANTS.AGATS_FORMAT_FILE_STRUCTURE
+        path_structure: str = UTILITIES_FILE_PATH_CONSTANTS.FORMAT_FILE_STRUCTURE
         graph: Graph = agats.import_agats_file(path_structure, AGATS_FILENAME)
-        # print(agats.common_path)
         self.graph = graph
 
         loop: int = 1
@@ -89,11 +88,10 @@ class DataManipulationService:
         self.__export_gats(gats_to_export, gats_file_name)
 
         session_list: List[str] = [gats_file_name]
-        gats_to_agats: Gats() = self.__create_gats(loop, NEW_PROV_FILES_DIRECTORY, session_list)
-
+        gats_to_agats: Gats() = \
+            self.__create_gats(loop, UTILITIES_FILE_PATH_CONSTANTS.READ_NEW_PROV_FILES_DIRECTORY, session_list)
         agats.graph_agats = gats_to_agats.graph_gats
         agats.set_common_edges_from_file_read(session_list)
-        # print(agats.common_path)
 
         should_paint: bool = True
         self.__export_agats(agats, should_paint)
@@ -124,12 +122,12 @@ class DataManipulationService:
 
     def __export_agats(self, agats: AGats, should_color_graph: bool):
         AGATS_SERVICE.export_agats(self.read_session_time, agats,
-                                   UTILITIES_FILE_PATH_CONSTANTS.GATS_FORMAT_FILE_STRUCTURE,
+                                   UTILITIES_FILE_PATH_CONSTANTS.FORMAT_FILE_STRUCTURE,
                                    AGATS_FILENAME, should_color_graph)
 
     def __export_gats(self, gats: Gats, file_name: str):
         GATS_SERVICE.export_gats(self.read_session_time, gats,
-                                 UTILITIES_FILE_PATH_CONSTANTS.GATS_FORMAT_FILE_STRUCTURE,
+                                 UTILITIES_FILE_PATH_CONSTANTS.FORMAT_FILE_STRUCTURE,
                                  file_name)
 
     def __set_session_time(self):
@@ -155,14 +153,14 @@ class DataManipulationService:
 
     @staticmethod
     def __get_file_path_list(directory) -> List[str]:
-        file_path_list: List[str] = UTILITIES_IOS.get_fullname_from_all_files_in_dir(directory)
+        file_path_list: List[str] = UTILITIES_IO.get_fullname_from_all_files_in_dir(directory)
         return file_path_list
 
     @staticmethod
     def __ask_for_invalid_edges_to_user():
         has_invalid_edge: bool = True
-        filename = UTILITIES_FILE_PATH_CONSTANTS.INVALID_EDGES_FILE_NAME
-        file_path_and_name = os.path.join(UTILITIES_FILE_PATH_CONSTANTS.INVALID_EDGES_FILES_DIRECTORY, filename)
+        filename = UTILITIES_FILE_PATH_CONSTANTS.READ_INVALID_EDGES_FILE_NAME
+        file_path_and_name = os.path.join(UTILITIES_FILE_PATH_CONSTANTS.READ_INVALID_EDGES_FILES_DIRECTORY, filename)
         with open(file_path_and_name, 'a') as file:
             while has_invalid_edge:
                 invalid_edge_response = input(HAS_INVALID_EDGES_MESSAGE)
@@ -180,3 +178,15 @@ class DataManipulationService:
 
                 else:
                     print(INVALID_ENTRY_MESSAGE)
+
+    @staticmethod
+    def __show_lines_on_all_projects():
+        model_lines = EXTRACT_PROV_DATA_SERVICE.item_line_count(UTILITIES_FILE_PATH_CONSTANTS.MODELS_DIRECTORY)
+        interface_lines = EXTRACT_PROV_DATA_SERVICE.item_line_count(UTILITIES_FILE_PATH_CONSTANTS.INTERFACE_DIRECTORY)
+        services_lines = EXTRACT_PROV_DATA_SERVICE.item_line_count(UTILITIES_FILE_PATH_CONSTANTS.SERVICES_DIRECTORY)
+        utils_lines = EXTRACT_PROV_DATA_SERVICE.item_line_count(UTILITIES_FILE_PATH_CONSTANTS.UTILS_DIRECTORY)
+
+        resp = model_lines + interface_lines + services_lines + utils_lines
+        print('\nModels Total Lines: {}\nInterface Total Lines: {}\nServices Total Lines: {}\nUtils Total Lines: {}'
+              .format(model_lines, interface_lines, services_lines, utils_lines))
+        print('\nApplication Total Lines: {}'.format(resp))
