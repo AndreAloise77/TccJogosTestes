@@ -78,7 +78,7 @@ class AGats(Graph):
         self.invalid_edges = UTILITIES_IO.read_invalid_edges_file(invalid_file_name)
 
     def export_file(self, path: str, file_name: str, agats: Digraph):
-        agats.render(path.format(UtilitiesFilePathConstants.TEST_OUTPUT_PATH,
+        agats.render(path.format(UtilitiesFilePathConstants.OUTPUT_PATH,
                                  UtilitiesFilePathConstants.OUTPUT_AGATS_PATH,
                                  self.folder_name, file_name,
                                  UtilitiesFilePathConstants.GRAPHVIZ_EXTENSION_FILE),

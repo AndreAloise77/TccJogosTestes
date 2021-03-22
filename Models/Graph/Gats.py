@@ -16,7 +16,7 @@ class Gats(Graph):
         self.folder_name = session_time
 
     def export_file(self, path: str, file_name: str, gats: Digraph()):
-        gats.render(path.format(UtilitiesFilePathConstants.TEST_OUTPUT_PATH,
+        gats.render(path.format(UtilitiesFilePathConstants.OUTPUT_PATH,
                                 UtilitiesFilePathConstants.OUTPUT_GATS_PATH,
                                 self.folder_name, file_name,
                                 UtilitiesFilePathConstants.GRAPHVIZ_EXTENSION_FILE), view=False)
