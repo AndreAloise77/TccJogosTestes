@@ -1,12 +1,12 @@
 from typing import List
 
-from Models.ProvVertexAttribute import ProvVertexAttribute
+from Models.Provenience.ProvVertexAttribute import ProvVertexAttribute
 
 
 class ProvVertex:
-    def __init__(self, str_id, type_element, label_element, date_element,
+    def __init__(self, vertex_id: str, type_element: str, label_element: str, date_element: str,
                  attributes: List[ProvVertexAttribute], is_obj_player: bool):
-        self.str_id = str_id
+        self.vertex_id = vertex_id
         self.type_element = type_element
         self.label_element = label_element
         self.date_element = date_element

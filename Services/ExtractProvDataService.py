@@ -1,147 +1,166 @@
 # Import System Struct Objects
+from os import listdir
+from os.path import isfile, isdir, join
 from typing import Dict, List
+# Import Utilities
+from xml.etree.ElementTree import ElementTree
 
+import Utils.UtilitiesIO
+import Utils.UtilitiesProvConstants
+from Models.Provenience.ProvEdge import ProvEdge
+from Models.Provenience.ProvVertex import ProvVertex
 # Import Models
-from Models.Graph import Graph
-from Models.ProvVertexAttribute import ProvVertexAttribute
-from Models.ProvVertex import ProvVertex
-from Models.ProvEdge import ProvEdge
-from Utils.UtilitiesProvConstants import UtilitiesProvConstants
+from Models.Provenience.ProvVertexAttribute import ProvVertexAttribute
 
-# Import Utility Functions
-from Utils.UtilitiesIO import get_single_file_in_dir
-
-# Constants:
-REGION = 'Region'
-EDGE_LABEL_NEUTRAL = 'Neutral'
-ATTRIBUTE_NAME_OBJECT_NAME = 'ObjectName'
-ATTRIBUTE_VALUE_PLAYER = 'Player'
+# LOCAL CONSTANTS
+UTILITIES_IO = Utils.UtilitiesIO
+UTILITIES_CONSTANTS = Utils.UtilitiesProvConstants.UtilitiesProvConstants
 
 
-def get_tree_from_file_path(file_path: str):
-    file_tree = get_single_file_in_dir(file_path)
+def get_tree_from_filename(file_name: str) -> ElementTree:
+    file_tree: ElementTree = UTILITIES_IO.build_tree_by_filename(file_name)
     return file_tree
 
 
-def get_tree_vertices_dictionary(tree_from_file):
+def get_tree_vertices_dictionary(tree_from_file) -> Dict[str, ProvVertex]:
     dictionary_vertex: Dict[str, ProvVertex] = {}
-    new_attribute: ProvVertexAttribute
+    new_vertex_attribute: ProvVertexAttribute
     new_vertex: ProvVertex
-    prov_vertices = tree_from_file.findall(UtilitiesProvConstants.VERTICES)
+    prov_vertices = tree_from_file.findall(UTILITIES_CONSTANTS.VERTICES)
 
     for vertices in prov_vertices:
-        vertices_vertex = vertices.findall(UtilitiesProvConstants.VERTEX)
+        vertices_vertex = vertices.findall(UTILITIES_CONSTANTS.VERTEX)
         for vertex in vertices_vertex:
-            id_vertex = vertex.find(UtilitiesProvConstants.ID).text
-            type_vertex = vertex.find(UtilitiesProvConstants.TYPE).text
-            label_vertex = vertex.find(UtilitiesProvConstants.LABEL).text
-            date_vertex = vertex.find(UtilitiesProvConstants.VERTEX_DATE).text
+            id_vertex = vertex.find(UTILITIES_CONSTANTS.ID).text
+            type_vertex = vertex.find(UTILITIES_CONSTANTS.TYPE).text
+            label_vertex = vertex.find(UTILITIES_CONSTANTS.LABEL).text
+            date_vertex = vertex.find(UTILITIES_CONSTANTS.VERTEX_DATE).text
 
             vertex_attributes_list: List[ProvVertexAttribute] = []
-            attributes_vertex = vertex.findall(UtilitiesProvConstants.ATTRIBUTES)
+            attributes_vertex = vertex.findall(UTILITIES_CONSTANTS.ATTRIBUTES)
 
             for a_v in attributes_vertex:
-                attribute_from_attributes = a_v.findall(UtilitiesProvConstants.ATTRIBUTE)
+                attribute_from_attributes = a_v.findall(UTILITIES_CONSTANTS.ATTRIBUTE)
                 object_player: bool = False
 
                 for att in attribute_from_attributes:
-                    name = att.find(UtilitiesProvConstants.ATTRIBUTE_NAME).text
-                    att_value = att.find(UtilitiesProvConstants.VALUE).text
+                    name = att.find(UTILITIES_CONSTANTS.ATTRIBUTE_NAME).text
+                    att_value = att.find(UTILITIES_CONSTANTS.VALUE).text
 
-                    if name == ATTRIBUTE_NAME_OBJECT_NAME and att_value == ATTRIBUTE_VALUE_PLAYER:
+                    if name == UTILITIES_CONSTANTS.ATTRIBUTE_NAME_OBJECT_NAME and \
+                            att_value == UTILITIES_CONSTANTS.ATTRIBUTE_VALUE_PLAYER:
                         object_player = True
-                    new_attribute = ProvVertexAttribute(name, att_value)
-                    vertex_attributes_list.append(new_attribute)
-                '''End For single attribute'''
+                    new_vertex_attribute = ProvVertexAttribute(name, att_value)
+                    vertex_attributes_list.append(new_vertex_attribute)
+                # end loop for single vertex attribute read
+
                 new_vertex = \
                     ProvVertex(id_vertex, type_vertex, label_vertex, date_vertex, vertex_attributes_list, object_player)
-                '''Limpa a lista de atributos para uma nova lista'''
+                # clean attribute list
                 vertex_attributes_list = []
                 dictionary_vertex[id_vertex] = new_vertex
-            '''End For attributes'''
-        '''End For single vertex'''
-    '''End For vertices'''
+            # end 'for' attributes
+        # end 'for' single vertex
+    # end 'for' vertices
     return dictionary_vertex
 
 
-def get_tree_edges_dictionary(tree_from_file, dict_vertex: Dict[str, ProvVertex]):
+def get_tree_edges_dictionary(tree_from_file, dict_vertex: Dict[str, ProvVertex]) -> Dict[str, ProvEdge]:
     dictionary_edges: Dict[str, ProvEdge] = {}
     new_edge: ProvEdge
-    prov_edges = tree_from_file.findall(UtilitiesProvConstants.EDGES)
+    prov_edges = tree_from_file.findall(UTILITIES_CONSTANTS.EDGES)
 
     for edges_edg in prov_edges:
-        edges_edge = edges_edg.findall(UtilitiesProvConstants.EDGE)
+        edges_edge = edges_edg.findall(UTILITIES_CONSTANTS.EDGE)
 
         for e in edges_edge:
-            edge_id = e.find(UtilitiesProvConstants.ID).text
-            edge_type = e.find(UtilitiesProvConstants.TYPE).text
-            edge_label = e.find(UtilitiesProvConstants.LABEL).text
-            edge_value = e.find(UtilitiesProvConstants.VALUE).text
+            edge_id = e.find(UTILITIES_CONSTANTS.ID).text
+            edge_type = e.find(UTILITIES_CONSTANTS.TYPE).text
+            edge_label = e.find(UTILITIES_CONSTANTS.LABEL).text
+            edge_value = e.find(UTILITIES_CONSTANTS.VALUE).text
 
-            edge_source_id = e.find(UtilitiesProvConstants.EDGE_SOURCE_ID).text
+            edge_source_id = e.find(UTILITIES_CONSTANTS.EDGE_SOURCE_ID).text
             source_vertex = dict_vertex.get(edge_source_id)
 
-            edge_target_id = e.find(UtilitiesProvConstants.EDGE_TARGET_ID).text
+            edge_target_id = e.find(UTILITIES_CONSTANTS.EDGE_TARGET_ID).text
             target_vertex = dict_vertex.get(edge_target_id)
 
             new_edge = ProvEdge(edge_id, edge_type, edge_label, edge_value, source_vertex, target_vertex)
             dictionary_edges[edge_id] = new_edge
-        '''End For Edge'''
-    '''End For Edges'''
+        # end 'for' single Edge
+    # end 'for' Edges
     return dictionary_edges
 
 
-def filter_edge_dict_by_type_and_label(dictionary: Dict[str, ProvEdge], type_element: str, label_element: str = ''):
-    edge_dict: Dict[str, ProvEdge] = {}
-    for index, key in enumerate(dictionary):
+def filter_edge_dict_by_type_and_label(dictionary: Dict[str, ProvEdge],
+                                       type_element: str, label_element: str = '') -> Dict[str, ProvEdge]:
+    filtered_edges_dict: Dict[str, ProvEdge] = {}
+    for key in dictionary:
         edge = dictionary[key]
-        is_edge_neutral = edge.label_element == EDGE_LABEL_NEUTRAL
+
+        # bypass the edge read, if label is not Neutral
+        is_edge_neutral = edge.label_element == UTILITIES_CONSTANTS.EDGE_LABEL_NEUTRAL
         if not is_edge_neutral:
             continue
-        source_v = edge.source_vertex_id
-        target_v = edge.target_vertex_id
-        is_source_player = source_v.is_obj_player
-        is_target_player = target_v.is_obj_player
-        '''Caso algum vertex não seja do tipo player, pula de edge'''
-        if (not is_source_player) or (not is_target_player):
+
+        source_vertex: ProvVertex = edge.source_vertex_id
+        target_vertex: ProvVertex = edge.target_vertex_id
+
+        # bypass the edge read, if the vertex is not from a player
+        is_from_player: bool = __check_vertex_came_from_player(source_vertex, target_vertex)
+        if not is_from_player:
             continue
-        is_source_type = source_v.type_element == type_element
-        is_target_type = target_v.type_element == type_element
-        '''Caso algum vextex não seja do tipo passado, pula de edge'''
-        if (not is_source_type) or (not is_target_type):
+
+        # validate if 'type_element' from any vertex matches the param 'type_element'
+        has_matched_types: bool = \
+            __validate_param_match(source_vertex.type_element, target_vertex.type_element, type_element)
+        if not has_matched_types:
             continue
-        '''Se o usuário desejar filtrar por label'''
+
+        # filter by label
         if label_element:
-            is_source_label = source_v.label_element == label_element
-            is_target_label = target_v.label_element == label_element
-            '''Caso algum vertex não seja do label passado, pula de edge'''
-            if (not is_source_label) or (not is_target_label):
+            # bypass the edge read, if the label not matches the param 'label_element'
+            has_matched_labels: bool = \
+                __validate_param_match(source_vertex.label_element, target_vertex.label_element, label_element)
+            if not has_matched_labels:
                 continue
-        edge_id = edge.id_name
-        '''Caso atenda as condições anteriores, adicionamos no dicionario'''
-        edge_dict[edge_id] = edge
-    return edge_dict
+
+        # add edge 'filtered' to dictionary
+        edge_id = edge.edge_id_name
+        filtered_edges_dict[edge_id] = edge
+    return filtered_edges_dict
 
 
-def __get_region_from_vertex(vertex: ProvVertex):
-    region: str = ''
-    for att in vertex.attributes:
-        att_name = att.get_name()
-        if att_name == REGION:
-            region = att.get_value()
-    return region
+def __check_vertex_came_from_player(source_vertex: ProvVertex, target_vertex: ProvVertex) -> bool:
+    is_from_player: bool = True
+    is_source_player: bool = source_vertex.is_obj_player
+    is_target_player: bool = target_vertex.is_obj_player
+
+    if (not is_source_player) or (not is_target_player):
+        is_from_player = False
+
+    return is_from_player
 
 
-def __try_add_edge_to_graph(edge: ProvEdge, graph: Graph, file_name: str):
-    source_vertex = edge.source_vertex_id
-    source_region = __get_region_from_vertex(source_vertex)
-    target_vertex = edge.target_vertex_id
-    target_region = __get_region_from_vertex(target_vertex)
-    if source_region != target_region:
-        graph.add_edge(target_region, source_region, file_name)
+def __validate_param_match(source_param: str, target_param: str, param: str) -> bool:
+    has_matched_params: bool = True
+    has_source_matched: bool = source_param == param
+    has_target_matched: bool = target_param == param
+
+    if (not has_source_matched) or (not has_target_matched):
+        has_matched_params = False
+
+    return has_matched_params
 
 
-def add_edges_to_graph(dict_edge: Dict[str, ProvEdge], graph: Graph, file_name: str):
-    for index_enum, key_dict in enumerate(dict_edge):
-        edge = dict_edge[key_dict]
-        __try_add_edge_to_graph(edge, graph, file_name)
+def item_line_count(path):
+    if isdir(path):
+        return dir_line_count(path)
+    elif isfile(path):
+        return len(open(path, 'rb').readlines())
+    else:
+        return 0
+
+
+def dir_line_count(dire):
+    return sum(map(lambda item: item_line_count(join(dire, item)), listdir(dire)))

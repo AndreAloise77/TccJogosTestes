@@ -1,4 +1,4 @@
-from Tests.LeituraManipulacaoDadosT import LeituraManipulacaoDadosT
+from Services.DataManipulationService import DataManipulationService
 
-test01 = LeituraManipulacaoDadosT()
-test01.main()
+run_session = DataManipulationService()
+run_session.main()

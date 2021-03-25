@@ -1,0 +1,32 @@
+class UtilitiesFilePathConstants:
+
+    # FILE PATH STRUCTURE
+    FORMAT_FILE_STRUCTURE: str = '{}/{}/{}/{}{}'
+    INVALID_EDGES_FILES_STRUCTURE: str = '{}/{}{}'
+
+    # DIRECTORIES
+    FILES_DIRECTORY: str = 'Files'
+    FILES_INVALID_DIRECTORY: str = 'InvalidEdges'
+    FILES_PROV_DIRECTORY: str = 'ProvFiles'
+    FILES_PROV_NEW_DIRECTORY: str = 'New'
+    MODELS_DIRECTORY: str = 'Models'
+    INTERFACE_DIRECTORY: str = 'Interface'
+    SERVICES_DIRECTORY: str = 'Services'
+    UTILS_DIRECTORY: str = 'Utils'
+    OUTPUT_PATH: str = 'test-output'
+    OUTPUT_GATS_PATH: str = 'Gats'
+    OUTPUT_AGATS_PATH: str = 'A-Gats'
+
+    READ_OUT_PUT_AGATS_DIRECTORY: str = '{}/{}'.format(OUTPUT_PATH, OUTPUT_AGATS_PATH)
+    READ_INVALID_EDGES_FILES_DIRECTORY: str = '{}/{}'.format(FILES_DIRECTORY, FILES_INVALID_DIRECTORY)
+    READ_PROV_FILES_DIRECTORY: str = '{}/{}'.format(FILES_DIRECTORY, FILES_PROV_DIRECTORY)
+    READ_NEW_PROV_FILES_DIRECTORY: str = '{}/{}'.format(READ_PROV_FILES_DIRECTORY, FILES_PROV_NEW_DIRECTORY)
+
+    # FILE EXTENSION
+    GRAPHVIZ_EXTENSION_FILE: str = '.gv'
+    TEXT_EXTENSION_FILE: str = '.txt'
+    XML_EXTENSION_FILE: str = '.xml'
+
+    # FILE NAME
+    INVALID_EDGE_FILENAME: str = 'invalid_edges'
+    READ_INVALID_EDGES_FILE_NAME: str = '{}{}'.format(INVALID_EDGE_FILENAME, TEXT_EXTENSION_FILE)
