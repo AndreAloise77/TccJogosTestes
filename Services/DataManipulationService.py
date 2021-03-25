@@ -44,10 +44,10 @@ class DataManipulationService:
         self.graph: Graph = Graph()
         self.read_session_time: str = ''
 
+    # Change call for the desired functionality
     def main(self):
-        # self.create_agats()
+        self.create_agats()
         self.import_agats()
-        self.__show_lines_on_all_projects()
 
     def create_agats(self):
         self.__set_session_time()
@@ -179,6 +179,7 @@ class DataManipulationService:
                 else:
                     print(INVALID_ENTRY_MESSAGE)
 
+    # Method that show how many coded lines were made on the following projects
     @staticmethod
     def __show_lines_on_all_projects():
         model_lines = EXTRACT_PROV_DATA_SERVICE.item_line_count(UTILITIES_FILE_PATH_CONSTANTS.MODELS_DIRECTORY)
