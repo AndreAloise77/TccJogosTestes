@@ -22,7 +22,7 @@ def get_tree_from_filename(file_name: str) -> ElementTree:
     return file_tree
 
 
-def get_tree_vertices_dictionary(tree_from_file) -> Dict[str, ProvVertex]:
+def get_tree_vertices_dictionary(tree_from_file: ElementTree) -> Dict[str, ProvVertex]:
     dictionary_vertex: Dict[str, ProvVertex] = {}
     new_vertex_attribute: ProvVertexAttribute
     new_vertex: ProvVertex
@@ -153,7 +153,7 @@ def __validate_param_match(source_param: str, target_param: str, param: str) -> 
     return has_matched_params
 
 
-def item_line_count(path):
+def item_line_count(path: str) -> int:
     if isdir(path):
         return dir_line_count(path)
     elif isfile(path):
@@ -162,5 +162,5 @@ def item_line_count(path):
         return 0
 
 
-def dir_line_count(dire):
+def dir_line_count(dire: str) -> int:
     return sum(map(lambda item: item_line_count(join(dire, item)), listdir(dire)))

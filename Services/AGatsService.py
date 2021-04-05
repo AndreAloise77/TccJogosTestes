@@ -17,7 +17,7 @@ COLOR_BLUE = 'blue'
 COLOR_BLACK = 'black'
 
 
-def __create_dot_and_notes(graph: Graph, file_name: str):
+def __create_dot_and_notes(graph: Graph, file_name: str) -> Digraph:
     graph.add_id_to_vertex()
     dot = Digraph(comment=file_name)
     node_dict: Dict[int, str] = graph.vertices_to_node
@@ -77,7 +77,7 @@ def __try_to_build_agats_graph(agats: AGats, file_name: str, should_paint: bool)
 
 # vertex_indicator = 0 for SOURCE
 # vertex_indicator = 1 for TARGET
-def __get_region_from_invalid_edges_list(invalid_edges_list: List[str], vertex_indicator: int):
+def __get_region_from_invalid_edges_list(invalid_edges_list: List[str], vertex_indicator: int) -> List[str]:
     if vertex_indicator > 1 or vertex_indicator < 0:
         raise ValueError("Param [vertex_indicator] must be 0 or 1")
 
@@ -91,7 +91,7 @@ def __get_region_from_invalid_edges_list(invalid_edges_list: List[str], vertex_i
     return regions_list
 
 
-def __get_invalid_regions_by_invalid_id_list(invalid_id_list: List[str], node_vertices: Dict[int, str]):
+def __get_invalid_regions_by_invalid_id_list(invalid_id_list: List[str], node_vertices: Dict[int, str]) -> List[str]:
     source_region_list: List[str] = []
     for invalid_id in invalid_id_list:
         id_int: int = int(invalid_id)

@@ -5,8 +5,8 @@ GRAPH_EDGE_STYLE_BOLD: str = 'bold'
 GRAPH_EDGE_CONSTRAINT_TRUE: str = 'true'
 COMMA_WITH_RESPAWNED_INDICATOR: str = ', Resp'
 FREQUENCY_TEXT_TO_GRAPH: str = 'Freq: {}'
-COLOR_RED = 'red'
-COLOR_BLACK = 'black'
+COLOR_RED: str = 'red'
+COLOR_BLACK: str = 'black'
 GRAPH_EDGE_STYLE_DASHED: str = 'dashed'
 
 

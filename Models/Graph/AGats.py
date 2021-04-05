@@ -84,7 +84,7 @@ class AGats(Graph):
                                  UtilitiesFilePathConstants.GRAPHVIZ_EXTENSION_FILE),
                      view=True)
 
-    def import_agats_file(self, path: str, file_name: str):
+    def import_agats_file(self, path: str, file_name: str) -> Graph:
         graph: Graph = Graph()
         line_list: List[str] = UTILITIES_IO.import_agats_file_to_list(path, self.folder_name, file_name)
         edge_lines: List[str] = []
@@ -114,7 +114,7 @@ class AGats(Graph):
                     edge_lines.append(valid_line)
 
     @staticmethod
-    def __prepare_vertex_region_from_file(info_list: List[str]):
+    def __prepare_vertex_region_from_file(info_list: List[str]) -> str:
         vertex_region: str = info_list[0].replace(UtilitiesAGatsFileConstants.QUOTATION_MARK, '')
         vertex_region = vertex_region.replace(UtilitiesAGatsFileConstants.DOUBLE_BACKSLASH, '')
         vertex_region = UtilitiesAGatsFileConstants.WHITE_SPACE.join(vertex_region.split())

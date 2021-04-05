@@ -22,8 +22,8 @@ class UtilitiesProvConstants:
     ATTRIBUTE_NAME_OBJECT_NAME: str = 'ObjectName'
     ATTRIBUTE_VALUE_PLAYER: str = 'Player'
     ACTIVITY: str = 'Activity'
-    RESPAWN = 'Respawn'
-    REGION = 'Region'
+    RESPAWN: str = 'Respawn'
+    REGION: str = 'Region'
 
     # Edge Tags Name Value
-    EDGE_LABEL_NEUTRAL = 'Neutral'
+    EDGE_LABEL_NEUTRAL: str = 'Neutral'

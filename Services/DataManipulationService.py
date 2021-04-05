@@ -28,13 +28,6 @@ UTILITIES_CONSTANTS = Utils.UtilitiesProvConstants.UtilitiesProvConstants
 UTILITIES_IO = Utils.UtilitiesIO
 UTILITIES_FILE_PATH_CONSTANTS = Utils.UtilitiesFilePathConstants.UtilitiesFilePathConstants
 
-DATE_FORMAT: str = '%Y-%m-%d_%H-%M-%S'
-
-HAS_INVALID_EDGES_MESSAGE: str = "O modelo possui alguma aresta (edge) inválida não informada? (S/s ou N/n): "
-HAS_INVALID_NODE_EDGES_MESSAGE: str = \
-    "Entre com os IDs das regiões (nodes) que possuem uma aresta (edge) inválida (Ex:01 -> 02):"
-INVALID_ENTRY_MESSAGE: str = "Por favor, entre com uma resposta válida (S/s ou N/n)"
-
 AGATS_FILENAME: str = 'Agats'
 GATS_FILENAME: str = 'Gats'
 
@@ -46,10 +39,10 @@ class DataManipulationService:
 
     # Change call for the desired functionality
     def main(self):
-        self.create_agats()
-        self.import_agats()
+        self.__create_agats()
+        self.__import_agats()
 
-    def create_agats(self):
+    def __create_agats(self):
         self.__set_session_time()
         loop: int = 1
         session_list: List[str] = []
@@ -67,7 +60,7 @@ class DataManipulationService:
 
         self.__ask_for_invalid_edges_to_user()
 
-    def import_agats(self):
+    def __import_agats(self):
         self.__set_session_time()
         folder_name_to_read: str = \
             UTILITIES_IO.get_dir_base_name(UTILITIES_FILE_PATH_CONSTANTS.READ_OUT_PUT_AGATS_DIRECTORY)
@@ -132,7 +125,8 @@ class DataManipulationService:
 
     def __set_session_time(self):
         time: datetime = datetime.now()
-        str_time: str = time.strftime(DATE_FORMAT)
+        date_format: str = '%Y-%m-%d_%H-%M-%S'
+        str_time: str = time.strftime(date_format)
         self.read_session_time = str_time
 
     @staticmethod
@@ -152,7 +146,7 @@ class DataManipulationService:
         self.__read_session(graph, path, file_name)
 
     @staticmethod
-    def __get_file_path_list(directory) -> List[str]:
+    def __get_file_path_list(directory: str) -> List[str]:
         file_path_list: List[str] = UTILITIES_IO.get_fullname_from_all_files_in_dir(directory)
         return file_path_list
 
@@ -161,9 +155,14 @@ class DataManipulationService:
         has_invalid_edge: bool = True
         filename = UTILITIES_FILE_PATH_CONSTANTS.READ_INVALID_EDGES_FILE_NAME
         file_path_and_name = os.path.join(UTILITIES_FILE_PATH_CONSTANTS.READ_INVALID_EDGES_FILES_DIRECTORY, filename)
+
+        has_invalid_edge_message: str = "O modelo possui alguma aresta (edge) inválida não informada? (S/s ou N/n): "
+        has_invalid_node_edges_message: str = \
+            "Entre com os IDs das regiões (nodes) que possuem uma aresta (edge) inválida (Ex:01 -> 02):"
+        invalid_entry_message: str = "Por favor, entre com uma resposta válida (S/s ou N/n)"
         with open(file_path_and_name, 'a') as file:
             while has_invalid_edge:
-                invalid_edge_response = input(HAS_INVALID_EDGES_MESSAGE)
+                invalid_edge_response = input(has_invalid_edge_message)
 
                 has_invalid: bool = (invalid_edge_response == 'S') or (invalid_edge_response == 's')
                 has_valid: bool = (invalid_edge_response == 'N') or (invalid_edge_response == 'n')
@@ -172,12 +171,12 @@ class DataManipulationService:
                     has_invalid_edge = False
 
                 elif has_invalid:
-                    invalid_edge = input(HAS_INVALID_NODE_EDGES_MESSAGE)
+                    invalid_edge = input(has_invalid_node_edges_message)
                     file.write(invalid_edge)
                     file.write('\n')
 
                 else:
-                    print(INVALID_ENTRY_MESSAGE)
+                    print(invalid_entry_message)
 
     # Method that show how many coded lines were made on the following projects
     @staticmethod

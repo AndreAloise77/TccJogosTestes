@@ -9,7 +9,6 @@ import Utils.UtilitiesFilePathConstants
 # Constants:
 UTILITIES_CONSTANTS = Utils.UtilitiesFilePathConstants.UtilitiesFilePathConstants
 UTILITIES_AGATS_CONSTANTS = Utils.UtilitiesAGatsFileConstants.UtilitiesAGatsFileConstants
-OPEN_FILE_TO_OVERRIDE: str = 'w'
 
 
 def get_single_file_in_dir(path: str):
@@ -72,7 +71,7 @@ def read_invalid_edges_file(invalid_file_name: str) -> List[str]:
     return file_lines_list
 
 
-def __clean_list(file_list: List[str]):
+def __clean_list(file_list: List[str]) -> List[str]:
     returned_list: List[str] = []
     for line in file_list:
         value: str = line.replace(UTILITIES_AGATS_CONSTANTS.OPEN_BRACKETS, '')
@@ -106,20 +105,13 @@ def write_on_invalid_file(invalid_edge_ids: str):
             file.write('\n')
 
 
-def write_on_temp_file(had_read_edge_file: bool, directory: str, file_name: str):
-    data: str = str(had_read_edge_file)
-    file_path_and_name = os.path.join(directory, file_name)
-    with open(file_path_and_name, OPEN_FILE_TO_OVERRIDE) as file:
-        file.write(data)
-
-
-def get_dir_base_name(path):
+def get_dir_base_name(path: str) -> str:
     folder_name = __get_sub_dir(path)
     base_name = os.path.basename(folder_name)
     return base_name
 
 
-def __get_sub_dir(directory):
+def __get_sub_dir(directory: str) -> str:
     folders: List[str] = []
     for x in os.walk(directory):
         folders.append(x[0])
