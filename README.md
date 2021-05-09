@@ -11,10 +11,16 @@ A linguagem de programação deste projeto é o Python(v3.8) pela da IDE PyCharm
 Adicionalmente, para criarmos os grafos visualmente para o usuário, utilizamos uma extensão denominanda de GraphViz(v2.46.0)
 Esta versão está disponível para download no site: https://graphviz.org/download/
 
-Disclaimer: 
-    Gostaria de deixar claro que este trabalho é somente uma versão inicial que faz parte de um projeto macro relacionado a jogos digitais.
-    Sendo assim, autorizo o uso deste projeto, por outros alunos da UFF, para fazer parte e ajudar em projetos futuros, 
-    desde que estes projetos futuros pertençam ao mesmo projeto macro o qual este trabalho(TccJogosTestes) pertence e que sejam dadas as devidas menções, créditos e agradecimentos tanto para o autor quanto aos professores orientadores deste trabalho(TccJogosTestes).
-    Para fins de modificação de lógica, pedir autorização para os professores orientadores deste projeto(Vânia de Oliveira e Troy Kohwalter) e ao próprio autor (caso seja necessário).
-
 Agradeço aos professores Vânia de Oliveira Neves e Troy Kohwalter pela oportunidade dada na participação deste projeto, através do desenvolvimento deste trabalho.
+
+----
+
+License
+
+Copyright (c) 2021 Universidade Federal Fluminense (UFF)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
